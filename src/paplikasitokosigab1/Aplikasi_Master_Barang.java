@@ -1,0 +1,724 @@
+
+package paplikasitokosigab1;
+
+import java.awt.event.ActionEvent;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import java.awt.event.KeyEvent;
+import javax.swing.table.DefaultTableModel;
+
+public class Aplikasi_Master_Barang extends javax.swing.JFrame {
+    
+    Connection c;
+    ResultSet r;
+    Statement s;
+    private Object[][]databarang=null;
+    private String[] label={"Kode Barang","Nama Barang","Diskon","Harga Jual","Jumlah","Rusak","Sisa"};
+    
+    public Aplikasi_Master_Barang() {
+    initComponents();
+    BukaKoneksi();
+    BacaTabelBarang();
+    tbl_brg.setVisible(true);
+    
+    tkd_brg.requestFocus();
+    }
+    private void BukaKoneksi(){
+    try{
+        Class.forName("com.mysql.jdbc.Driver");
+        c=DriverManager.getConnection("jdbc:mysql://localhost/db_tokosigab1","root","");
+        System.out.println("Koneksi Sukses");
+    }
+    catch(Exception e){
+    System.out.println(e);
+    }
+    }
+    
+    private void BacaTabelBarang(){
+    try{
+        
+    s=c.createStatement();
+    String sql="Select*From barang Order By kd_brg";
+    r=s.executeQuery(sql);
+    ResultSetMetaData m=r.getMetaData();
+    int kolom=m.getColumnCount();
+    int baris=0;
+    while(r.next()){
+    baris=r.getRow();
+    }
+    databarang=new Object[baris][kolom];
+    int x=0;
+    r.beforeFirst();
+        while (r.next()) {            
+            databarang[x][0]=r.getString("kd_brg");
+            databarang[x][1]=r.getString("nm_brg");
+            databarang[x][2]=r.getString("diskon");
+            databarang[x][3]=r.getString("hrg_jual");
+            databarang[x][4]=r.getString("jumlah");
+            databarang[x][5]=r.getString("rusak");
+            databarang[x][6]=r.getString("sisa");
+            x++;
+        }
+        tbl_brg.setModel(new DefaultTableModel(databarang,label));
+    }
+    catch(SQLException e){
+        JOptionPane.showMessageDialog(null,e);
+    }
+    }
+    
+    private void SetTabel(){
+        int row=tbl_brg.getSelectedRow();
+        tkd_brg.setText((String)tbl_brg.getValueAt(row,0));
+        tnm_brg.setText((String)tbl_brg.getValueAt(row,1));
+        tdiskon.setText((String)tbl_brg.getValueAt(row,2));
+        thrg_jual.setText((String)tbl_brg.getValueAt(row,3));
+        tjum.setText((String)tbl_brg.getValueAt(row,4));
+        trusak.setText((String)tbl_brg.getValueAt(row,5));
+        tsisa.setText((String)tbl_brg.getValueAt(row,5));
+    }
+    
+     private void BersihField(){
+        tkd_brg.setText("");
+        tnm_brg.setText("");
+        tdiskon.setText("");
+        thrg_jual.setText("");
+        tjum.setText("");
+        trusak.setText("");
+        tsisa.setText("");
+    }
+    
+     private void SimpanData(){
+        try{
+            String sql="Insert Into barang Values('"+tkd_brg.getText()+"','"+tnm_brg.getText()+"','"+tdiskon.getText()+"','"+thrg_jual.getText()+"','"+tjum.getText()+"','"+trusak.getText()+"','"+tsisa.getText()+"')";
+                   
+            s.executeUpdate(sql);
+            s.close();
+            JOptionPane.showMessageDialog(null,"Data berhasil ditambah");
+            BersihField();
+            BacaTabelBarang();
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+    
+        private void UpdateData(){
+        try{
+           String sql="Update barang Set kd_brg='"+tkd_brg.getText()+"',nm_brg='"+tnm_brg.getText()+"',diskon='"+tdiskon.getText()+"',hrg_jual='"+thrg_jual.getText()+"',jumlah='"+tjum.getText()+"',rusak='"+trusak.getText()+"',sisa='"+tsisa.getText()+"'Where kd_brg='"+tkd_brg.getText()+"'";
+           
+            s.executeUpdate(sql);
+            s.close();
+            JOptionPane.showMessageDialog(null,"Data Berhasil diedit");
+            BersihField();
+            BacaTabelBarang();
+            }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+        
+        private void HapusData(){
+        try{
+            String sql="Delete from barang where kd_brg='"+tkd_brg.getText()+"'";
+            s.executeUpdate(sql);
+            s.close();
+            JOptionPane.showMessageDialog(null,"Data Berhasil dihapus");
+            BersihField();
+            BacaTabelBarang();
+        }
+            catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e);
+            }
+        }
+        
+        //EXIT
+    private void ExitWindow(){
+    int confirmed = JOptionPane.showConfirmDialog(null, "Keluar Dari Program","Exit",JOptionPane.YES_NO_OPTION );
+    if (confirmed == JOptionPane.YES_OPTION )
+    {
+        dispose();
+    }else
+    {
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    tkd_brg.requestFocus();
+    }
+    }
+        
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbl_brg = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        tkd_brg = new javax.swing.JTextField();
+        tnm_brg = new javax.swing.JTextField();
+        tdiskon = new javax.swing.JTextField();
+        thrg_jual = new javax.swing.JTextField();
+        tjum = new javax.swing.JTextField();
+        trusak = new javax.swing.JTextField();
+        tsisa = new javax.swing.JTextField();
+        bt_tambah = new javax.swing.JButton();
+        bt_edit = new javax.swing.JButton();
+        bt_hapus = new javax.swing.JButton();
+        bt_keluar = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("APLIKASI MASTER BARANG");
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("TABEL DATA BARANG");
+
+        tbl_brg.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Kode Barang", "Nama Barang", "Diskon", "Harga Jual", "Jumlah", "Rusak", "Sisa"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tbl_brg.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_brgMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbl_brg);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("INPUT DATA BARANG");
+
+        jLabel3.setText("Data Barang");
+
+        jLabel4.setText("Stok Barang");
+
+        jLabel5.setText("Kode Barang");
+
+        jLabel6.setText("Nama Barang");
+
+        jLabel7.setText("Diskon");
+
+        jLabel8.setText("Harga Jual");
+
+        jLabel10.setText("Jumlah Barang");
+
+        jLabel11.setText("Rusak");
+
+        jLabel12.setText("Sisa Barang");
+
+        tkd_brg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tkd_brgActionPerformed(evt);
+            }
+        });
+        tkd_brg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tkd_brgKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tkd_brgKeyReleased(evt);
+            }
+        });
+
+        tnm_brg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tnm_brgActionPerformed(evt);
+            }
+        });
+        tnm_brg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tnm_brgKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tnm_brgKeyReleased(evt);
+            }
+        });
+
+        tdiskon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tdiskonActionPerformed(evt);
+            }
+        });
+        tdiskon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tdiskonKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tdiskonKeyReleased(evt);
+            }
+        });
+
+        thrg_jual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                thrg_jualActionPerformed(evt);
+            }
+        });
+        thrg_jual.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                thrg_jualKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                thrg_jualKeyReleased(evt);
+            }
+        });
+
+        tjum.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tjumKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tjumKeyReleased(evt);
+            }
+        });
+
+        trusak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trusakActionPerformed(evt);
+            }
+        });
+        trusak.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                trusakKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                trusakKeyReleased(evt);
+            }
+        });
+
+        tsisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tsisaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tsisaKeyReleased(evt);
+            }
+        });
+
+        bt_tambah.setText("Tambah");
+        bt_tambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_tambahActionPerformed(evt);
+            }
+        });
+
+        bt_edit.setText("Edit");
+        bt_edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_editActionPerformed(evt);
+            }
+        });
+
+        bt_hapus.setText("Hapus");
+        bt_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_hapusActionPerformed(evt);
+            }
+        });
+
+        bt_keluar.setText("Keluar");
+        bt_keluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_keluarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                    .addComponent(jLabel7)
+                                                    .addComponent(jLabel8))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(tkd_brg)
+                                                    .addComponent(tnm_brg)
+                                                    .addComponent(tdiskon, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                                                    .addComponent(thrg_jual)))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(bt_tambah)
+                                                .addGap(52, 52, 52)
+                                                .addComponent(bt_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(131, 131, 131))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(bt_hapus)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel10)
+                                                .addComponent(jLabel11)
+                                                .addComponent(jLabel12)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(tjum, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                                .addComponent(trusak)
+                                                .addComponent(tsisa))
+                                            .addComponent(bt_keluar, javax.swing.GroupLayout.Alignment.TRAILING)))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(144, 144, 144)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(136, 136, 136)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel10)
+                            .addComponent(tkd_brg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tjum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel11)
+                            .addComponent(tnm_brg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(trusak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel12)
+                            .addComponent(tdiskon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tsisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(thrg_jual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 84, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bt_tambah)
+                            .addComponent(bt_edit)
+                            .addComponent(bt_hapus)
+                            .addComponent(bt_keluar))
+                        .addContainerGap())))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tnm_brgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnm_brgActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tnm_brgActionPerformed
+
+    private void tkd_brgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tkd_brgActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tkd_brgActionPerformed
+
+    private void bt_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_tambahActionPerformed
+    int confirmed = JOptionPane.showConfirmDialog(null, "Tambah Data","Simpan",JOptionPane.YES_NO_OPTION );
+    if (confirmed == JOptionPane.YES_OPTION )
+    {
+        SimpanData();
+        tkd_brg.requestFocus();
+    }else
+    {
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    tkd_brg.requestFocus();
+    }
+    }//GEN-LAST:event_bt_tambahActionPerformed
+
+    private void bt_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_keluarActionPerformed
+        ExitWindow();
+    }//GEN-LAST:event_bt_keluarActionPerformed
+
+    private void bt_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_hapusActionPerformed
+        int confirmed = JOptionPane.showConfirmDialog(null, "Hapus Data","Hapus",JOptionPane.YES_NO_OPTION );
+    if (confirmed == JOptionPane.YES_OPTION )
+    {
+       HapusData();
+    }else
+    {
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    tkd_brg.requestFocus();
+    }  
+    }                                        
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
+     ExitWindow();
+    }//GEN-LAST:event_bt_hapusActionPerformed
+
+    private void tbl_brgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_brgMouseClicked
+        SetTabel();
+    }//GEN-LAST:event_tbl_brgMouseClicked
+
+    private void tkd_brgKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tkd_brgKeyReleased
+        try{
+            Statement s=c.createStatement();
+            String search=tkd_brg.getText();
+            ResultSet r=s.executeQuery("Select * from barang where kd_brg like '%"+search+"%'");
+            DefaultTableModel dtm=(DefaultTableModel)tbl_brg.getModel();
+            dtm.setRowCount(0);
+            String [] data=new String[7];
+            int i=1;
+            while (r.next())
+            {
+                data[0]=r.getString("kd_brg");
+                data[1]=r.getString("nm_brg");
+                data[2]=r.getString("diskon");
+                data[3]=r.getString("hrg_jual");
+                data[4]=r.getString("jumlah");
+                data[5]=r.getString("rusak");
+                data[6]=r.getString("sisa");
+                dtm.addRow(data);
+                i++;
+            }
+                r.close();
+        }
+        catch (Exception e){
+            JOptionPane.showMessageDialog(null,"Data yang Anda cari tidak ditemukan");
+            System.err.println("error (search): "+e);
+        }
+            String input=tkd_brg.getText();
+        if(input.length()>10){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            tkd_brg.setText("");
+        }
+    }//GEN-LAST:event_tkd_brgKeyReleased
+
+    private void tnm_brgKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tnm_brgKeyReleased
+        String input=tnm_brg.getText();
+        if(input.length()>20){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            tnm_brg.setText("");
+        }
+    }//GEN-LAST:event_tnm_brgKeyReleased
+
+    private void bt_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editActionPerformed
+        int confirmed = JOptionPane.showConfirmDialog(null, "Edit Data","Edit",JOptionPane.YES_NO_OPTION );
+    if (confirmed == JOptionPane.YES_OPTION )
+    {
+        UpdateData();
+    }else
+    {
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    tkd_brg.requestFocus();
+    }
+    }//GEN-LAST:event_bt_editActionPerformed
+
+    private void tkd_brgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tkd_brgKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            tnm_brg.requestFocus();
+        }
+    }//GEN-LAST:event_tkd_brgKeyPressed
+
+    private void tdiskonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tdiskonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tdiskonActionPerformed
+
+    private void tdiskonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tdiskonKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            thrg_jual.requestFocus();
+        }
+    }//GEN-LAST:event_tdiskonKeyPressed
+
+    private void tnm_brgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tnm_brgKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            tdiskon.requestFocus();
+        }
+    }//GEN-LAST:event_tnm_brgKeyPressed
+
+    private void thrg_jualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thrg_jualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_thrg_jualActionPerformed
+
+    private void thrg_jualKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_thrg_jualKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            tjum.requestFocus();
+        }
+    }//GEN-LAST:event_thrg_jualKeyPressed
+
+    private void tjumKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tjumKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            trusak.requestFocus();
+        }
+    }//GEN-LAST:event_tjumKeyPressed
+
+    private void trusakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trusakActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_trusakActionPerformed
+
+    private void trusakKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_trusakKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            tsisa.requestFocus();
+        }
+    }//GEN-LAST:event_trusakKeyPressed
+
+    private void tsisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tsisaKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            //tkd_brg.requestFocus();
+            bt_tambahActionPerformed(new ActionEvent(c, WIDTH, null));
+        }
+    }//GEN-LAST:event_tsisaKeyPressed
+
+    private void tdiskonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tdiskonKeyReleased
+        String input=tdiskon.getText();
+        if(input.length()>7){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            tdiskon.setText("");
+        }
+    }//GEN-LAST:event_tdiskonKeyReleased
+
+    private void thrg_jualKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_thrg_jualKeyReleased
+       String input=thrg_jual.getText();
+        if(input.length()>9){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            thrg_jual.setText("");
+        }
+    }//GEN-LAST:event_thrg_jualKeyReleased
+
+    private void tjumKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tjumKeyReleased
+        String input=tjum.getText();
+        if(input.length()>7){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            tjum.setText("");
+        }
+    }//GEN-LAST:event_tjumKeyReleased
+
+    private void trusakKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_trusakKeyReleased
+       String input=trusak.getText();
+        if(input.length()>10){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            trusak.setText("");
+        }
+    }//GEN-LAST:event_trusakKeyReleased
+
+    private void tsisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tsisaKeyReleased
+        String input=tsisa.getText();
+        if(input.length()>10){
+            JOptionPane.showMessageDialog(rootPane,"jumlah input melebihi batas");
+            tsisa.setText("");
+        }
+    }//GEN-LAST:event_tsisaKeyReleased
+
+   
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Aplikasi_Master_Barang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Aplikasi_Master_Barang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Aplikasi_Master_Barang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Aplikasi_Master_Barang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Aplikasi_Master_Barang().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_edit;
+    private javax.swing.JButton bt_hapus;
+    private javax.swing.JButton bt_keluar;
+    private javax.swing.JButton bt_tambah;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tbl_brg;
+    private javax.swing.JTextField tdiskon;
+    private javax.swing.JTextField thrg_jual;
+    private javax.swing.JTextField tjum;
+    private javax.swing.JTextField tkd_brg;
+    private javax.swing.JTextField tnm_brg;
+    private javax.swing.JTextField trusak;
+    private javax.swing.JTextField tsisa;
+    // End of variables declaration//GEN-END:variables
+}
